@@ -47,6 +47,13 @@ __console() {
         '-var-file=[(foo) Set variables in the Terraform configuration from a file. If "terraform.tfvars" or any ".auto.tfvars" files are present, they will be automatically loaded.]'
 }
 
+__console() {
+    _arguments \
+        '-state=path[Path to read state. Defaults to "terraform.tfstate"]'\
+        '-var "foo=bar"[Set a variable in the Terraform configuration. This flag can be set multiple times.]'\
+        '-var-file=foo[Set variables in the Terraform configuration from a file. If "terraform.tfvars" or any ".auto.tfvars" files are present, they will be automatically loaded.]'
+}
+
 __destroy() {
     _arguments \
         '-backup=[(path) Path to backup the existing state file before modifying. Defaults to the "-state-out" path with ".backup" extension. Set to "-" to disable backup.]' \
@@ -70,6 +77,14 @@ __fmt() {
         '-write=[(true) Write result to source file instead of STDOUT (always false if using STDIN or -check)]' \
         '-diff=[(false) Display diffs of formatting changes]' \
         '-check=[(false) Check if the input is formatted. Exit status will be 0 if all input is properly formatted and non-zero otherwise.]'
+}
+
+__fmt() {
+    _arguments \
+        '-list=true[List files whose formatting differs (always false if using STDIN)]' \
+        '-write=true[Write result to source file instead of STDOUT (always false if using STDIN or -check)]' \
+        '-diff=false[Display diffs of formatting changes]' \
+        '-check=false[Check if the input is formatted. Exit status will be 0 if all input is properly formatted and non-zero otherwise.]'
 }
 
 __get() {
@@ -99,6 +114,22 @@ __import() {
         '-state-out=[(PATH) Path to the destination state file to write to. If this is not specified, the source state file will be used. This can be a new or existing path.]' \
         '-var[("foo=bar") Set a variable in the Terraform configuration. This flag can be set multiple times. This is only useful with the "-config" flag.]' \
         '-var-file=[(foo) Set variables in the Terraform configuration from a file. If "terraform.tfvars" or any ".auto.tfvars" files are present, they will be automatically loaded.]'
+}
+
+__import() {
+    _arguments \
+          '-config=path[Path to a directory of Terraform configuration files to use to configure the provider. Defaults to pwd. If no config files are present, they must be provided via the input prompts or env vars.]' \
+          '-backup=path[Path to backup the existing state file before modifying. Defaults to the "-state-out" path with ".backup" extension. Set to "-" to disable backup.]' \
+          '-allow-missing-config[Allow import when no resource configuration block exists.]' \
+          '-input=true[Ask for input for variables if not directly set.]' \
+          '-lock=true[Lock the state file when locking is supported.]' \
+          '-lock-timeout=0s[Duration to retry a state lock.]' \
+          '-no-color[If specified, output wont contain any color.]' \
+          '-provider=provider[Specific provider to use for import. This is used for specifying aliases, such as "aws.eu". Defaults to the normal provider prefix of the resource being imported.]' \
+          '-state=PATH[Path to the source state file. Defaults to the configured backend, or "terraform.tfstate"]' \
+          '-state-out=PATH[Path to the destination state file to write to. If this isnt specified, the source state file will be used. This can be a new or existing path.]' \
+          '-var "foo=bar"[Set a variable in the Terraform configuration. This flag can be set multiple times. This is only useful with the "-config" flag.]' \
+          '-var-file=foo[Set variables in the Terraform configuration from a file. If "terraform.tfvars" or any ".auto.tfvars" files are present, they will be automatically loaded.]'
 }
 
 __init() {
@@ -227,6 +258,15 @@ __workspace() {
     _describe -t workspace "workspace commands" __workspace_cmds
 }
 
+__workspace() {
+    _arguments \
+        '-delete[Delete a workspace]' \
+        '-list[List Workspaces]' \
+        '-new[Create a new workspace]' \
+        '-select[Select a workspace]' \
+        '-show[Show the name of the current workspace]'
+}
+
 _arguments '*:: :->command'
 
 if (( CURRENT == 1 )); then
@@ -236,36 +276,36 @@ fi
 
 local -a _command_args
 case "$words[1]" in
-  apply)
-    __apply ;;
+    apply)
+        __apply ;;
   console)
     __console;;
-  destroy)
-    __destroy ;;
+    destroy)
+        __destroy ;;
   fmt)
     __fmt;;
-  get)
-    __get ;;
-  graph)
-    __graph ;;
+    get)
+        __get ;;
+    graph)
+        __graph ;;
   import)
     __import;;
-  init)
-    __init ;;
-  output)
-    __output ;;
-  plan)
-    __plan ;;
+    init)
+        __init ;;
+    output)
+        __output ;;
+    plan)
+        __plan ;;
   providers)
     __providers ;;
-  push)
-    __push ;;
-  refresh)
-    __refresh ;;
-  show)
-    __show ;;
-  taint)
-    __taint ;;
+    push)
+        __push ;;
+    refresh)
+        __refresh ;;
+    show)
+        __show ;;
+    taint)
+        __taint ;;
   untaint)
     __untaint ;;
   validate)
@@ -273,3 +313,4 @@ case "$words[1]" in
   workspace)
     test $CURRENT -lt 3 && __workspace ;;
 esac
+
