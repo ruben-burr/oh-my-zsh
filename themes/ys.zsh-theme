@@ -37,6 +37,7 @@ ys_hg_prompt_info() {
 
 local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"
 
+local k8s_info=' k8s:$(kubectl config current-context)/$(kubectl config get-contexts --no-headers | grep "*" | awk "{print \$5}")'
 # Prompt format:
 #
 # PRIVILEGES USER @ MACHINE in DIRECTORY on git:BRANCH STATE [TIME] C:LAST_EXIT_CODE
@@ -55,6 +56,7 @@ PROMPT="
 %{$terminfo[bold]$fg[yellow]%}%~%{$reset_color%}\
 ${hg_info}\
 ${git_info}\
+${k8s_info}\
  \
 %{$fg[white]%}[%*] $exit_code
 %{$terminfo[bold]$fg[red]%}$ %{$reset_color%}"
